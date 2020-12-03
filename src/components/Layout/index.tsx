@@ -5,12 +5,12 @@ import MainHeader from "../MainHeader";
 
 import { Grid } from "./style";
 
-const Layout: React.FC = () => {
+const Layout: React.FC = ({ children }) => {
   return (
     <Grid>
       <MainHeader />
       <Aside />
-      <Content />
+      <Content>{children}</Content>
     </Grid>
   );
 };
