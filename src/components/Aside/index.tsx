@@ -6,7 +6,7 @@ import {
   MenuContainer,
   MenuItemLink,
   Title,
-} from "./style";
+} from "./styles";
 import {
   MdDashboard,
   MdArrowDownward,

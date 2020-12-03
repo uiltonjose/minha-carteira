@@ -1,6 +1,7 @@
 import React from "react";
+import SelectInput from "../SelectInput";
 
-import { Container, TitleContainer, Controllers } from "./style";
+import { Container, TitleContainer, Controllers } from "./styles";
 
 const ContentHeader: React.FC = () => {
   return (
@@ -10,8 +11,7 @@ const ContentHeader: React.FC = () => {
       </TitleContainer>
 
       <Controllers>
-        <button type="button">Botão A</button>
-        <button type="button">Botão B</button>
+        <SelectInput/>
       </Controllers>
     </Container>
   );

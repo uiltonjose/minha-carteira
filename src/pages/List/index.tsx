@@ -1,7 +1,8 @@
-import React from 'react';
+import React from "react";
+import { Container } from "../../components/SelectInput/styles";
 
 const List: React.FC = () => {
-    return <h1>List</h1>
-}
+  return <Container></Container>;
+};
 
 export default List;
