@@ -7,6 +7,7 @@ import SelectInput from "../../components/SelectInput";
 
 import gains from "../../repositories/gains";
 import expenses from "../../repositories/expenses";
+
 import formatCurrency from "../../utils/formatCurrency";
 import formatDate from "../../utils/formatDate";
 import listOfMonths from "../../utils/months";
@@ -50,7 +51,7 @@ const List: React.FC<IRouteParams> = ({ match }) => {
     if (type === "entry-balance") {
       return {
         title: "Entradas",
-        lineColor: "#F7931B",
+        lineColor: "#4E41F0",
         listData: gains,
       };
     }
