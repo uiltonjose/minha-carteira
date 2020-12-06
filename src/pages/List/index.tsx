@@ -33,22 +33,32 @@ interface IData {
 
 const List: React.FC<IRouteParams> = ({ match }) => {
   const [data, setData] = useState<IData[]>([]);
-  const [monthSelected, setMonthSelected] = useState<string>(
-    String(new Date().getMonth() + 1)
+  const [monthSelected, setMonthSelected] = useState<number>(
+    new Date().getMonth() + 1
   );
-  const [yearSelected, setYearSelected] = useState<string>(
-    String(new Date().getFullYear())
+  const [yearSelected, setYearSelected] = useState<number>(
+    new Date().getFullYear()
   );
+  const [selectedFrequency, setSelectedFrequency] = useState([
+    "recurrent",
+    "eventual",
+  ]);
 
   const { type } = match.params;
-  const contentData = useMemo(() => {
-    return type === "entry-balance"
-      ? { title: "Entradas", lineColor: "#F7931B" }
-      : { title: "Saídas", lineColor: "#E44C4E" };
-  }, [type]);
 
-  const listData = useMemo(() => {
-    return type === "entry-balance" ? gains : expenses;
+  const pageData = useMemo(() => {
+    if (type === "entry-balance") {
+      return {
+        title: "Entradas",
+        lineColor: "#F7931B",
+        listData: gains,
+      };
+    }
+    return {
+      title: "Saídas",
+      lineColor: "#E44C4E",
+      listData: expenses,
+    };
   }, [type]);
 
   const months = useMemo(() => {
@@ -63,7 +73,7 @@ const List: React.FC<IRouteParams> = ({ match }) => {
   const years = useMemo(() => {
     let uniqueYears: number[] = [];
 
-    listData.forEach((item) => {
+    pageData.listData.forEach((item) => {
       const date = new Date(item.date);
       const year = date.getFullYear();
 
@@ -78,15 +88,18 @@ const List: React.FC<IRouteParams> = ({ match }) => {
         label: year,
       };
     });
-  }, [listData]);
+  }, [pageData.listData]);
 
   useEffect(() => {
-    const filteredData = listData.filter((item) => {
+    const filteredData = pageData.listData.filter((item) => {
       const date = new Date(item.date);
-      const month = String(date.getMonth() + 1);
-      const year = String(date.getFullYear());
-
-      return month === monthSelected && year === yearSelected;
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      return (
+        month === monthSelected &&
+        year === yearSelected &&
+        selectedFrequency.includes(item.frequency)
+      );
     });
 
     const formattedData = filteredData.map((item) => {
@@ -97,36 +110,80 @@ const List: React.FC<IRouteParams> = ({ match }) => {
         type: item.type,
         frequency: item.frequency,
         dateFormatted: formatDate(item.date),
-        tagColor: item.frequency === "recorrente" ? "#4E41F0" : "#E44C4E",
+        tagColor: item.frequency === "recurrent" ? "#4E41F0" : "#E44C4E",
       };
     });
 
     setData(formattedData);
-  }, [listData, monthSelected, yearSelected, data.length]);
+  }, [
+    pageData.listData,
+    monthSelected,
+    yearSelected,
+    data.length,
+    selectedFrequency,
+  ]);
+
+  const handleFrequencyClick = (frequency: string) => {
+    const alreadySelected = selectedFrequency.findIndex(
+      (item) => item === frequency
+    );
+
+    if (alreadySelected >= 0) {
+      const filtered = selectedFrequency.filter((item) => item !== frequency);
+      setSelectedFrequency(filtered);
+    } else {
+      setSelectedFrequency((prev) => [...prev, frequency]);
+    }
+  };
+
+  const handleMonthSelected = (month: string) => {
+    try {
+      const parsedMonth = Number(month);
+      setMonthSelected(parsedMonth);
+    } catch {
+      throw new Error("Invalid month value.");
+    }
+  };
+
+  const handleYearSelected = (year: string) => {
+    try {
+      const parsedYear = Number(year);
+      setYearSelected(parsedYear);
+    } catch {
+      throw new Error("Invalid year value.");
+    }
+  };
 
   return (
     <Container>
-      <ContentHeader
-        title={contentData.title}
-        lineColor={contentData.lineColor}
-      >
+      <ContentHeader title={pageData.title} lineColor={pageData.lineColor}>
         <SelectInput
           options={months}
-          onChange={(e) => setMonthSelected(e.target.value)}
+          onChange={(e) => handleMonthSelected(e.target.value)}
           defaultValue={monthSelected}
         />
         <SelectInput
           options={years}
-          onChange={(e) => setYearSelected(e.target.value)}
+          onChange={(e) => handleYearSelected(e.target.value)}
           defaultValue={yearSelected}
         />
       </ContentHeader>
 
       <Filters>
-        <button type="button" className="tag-filter tag-filter-recurrent">
+        <button
+          type="button"
+          className={`tag-filter tag-filter-recurrent
+          ${selectedFrequency.includes("recurrent") && "tag-actived"}`}
+          onClick={() => handleFrequencyClick("recurrent")}
+        >
           Recorrentes
         </button>
-        <button type="button" className="tag-filter tag-filter-eventual">
+        <button
+          type="button"
+          className={`tag-filter tag-filter-eventual
+          ${selectedFrequency.includes("eventual") && "tag-actived"}`}
+          onClick={() => handleFrequencyClick("eventual")}
+        >
           Eventuais
         </button>
       </Filters>
