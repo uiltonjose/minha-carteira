@@ -15,6 +15,7 @@ import sadImg from "../../assets/sad.svg";
 import grinningImg from "../../assets/grinning.svg";
 
 import { Container, Content } from "./styles";
+import PieChartBox from "../../components/PieChartBox";
 
 const Dashboard: React.FC = () => {
   const [monthSelected, setMonthSelected] = useState<number>(
@@ -106,7 +107,7 @@ const Dashboard: React.FC = () => {
           "Verifique seus gastos e tente cortar algumas coisas desnecessárias.",
         icon: sadImg,
       };
-    } else if (totalBalance == 0) {
+    } else if (totalBalance === 0) {
       return {
         title: "Ufaa!",
         description: "Neste mês, você gastou exatamente o que ganhou.",
@@ -121,6 +122,28 @@ const Dashboard: React.FC = () => {
       icon: happyImg,
     };
   }, [totalBalance]);
+
+  const relationExpensesVersusGains = useMemo(() => {
+    const total = totalGains + totalExpenses;
+
+    const percentGains = (totalGains / total) * 100;
+    const percentExpenses = (totalExpenses / total) * 100;
+
+    return [
+      {
+        name: "Entradas",
+        value: totalGains,
+        percent: Number(percentGains.toFixed(1)),
+        color: "#F7931B",
+      },
+      {
+        name: "Saídas",
+        value: totalExpenses,
+        percent: Number(percentExpenses.toFixed(1)),
+        color: "#E44C4E",
+      },
+    ];
+  }, [totalGains, totalExpenses]);
 
   const handleMonthSelected = (month: string) => {
     try {
@@ -186,6 +209,8 @@ const Dashboard: React.FC = () => {
           footerText={message.footerText}
           icon={message.icon}
         />
+
+        <PieChartBox data={relationExpensesVersusGains}/>
       </Content>
     </Container>
   );
