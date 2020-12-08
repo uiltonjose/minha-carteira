@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 
 import ContentHeader from "../../components/ContentHeader";
 import SelectInput from "../../components/SelectInput";
@@ -131,7 +131,7 @@ const Dashboard: React.FC = () => {
       footerText: "Conitnue assim. Conside investir o seu saldo.",
       icon: happyImg,
     };
-  }, [totalBalance, totalGains, totalExpenses ]);
+  }, [totalBalance, totalGains, totalExpenses]);
 
   const relationExpensesVersusGains = useMemo(() => {
     const total = totalGains + totalExpenses;
@@ -293,23 +293,23 @@ const Dashboard: React.FC = () => {
     ];
   }, [yearSelected, monthSelected]);
 
-  const handleMonthSelected = (month: string) => {
+  const handleMonthSelected = useCallback((month: string) => {
     try {
       const parsedMonth = Number(month);
       setMonthSelected(parsedMonth);
     } catch {
       throw new Error("Invalid month value.");
     }
-  };
+  }, []);
 
-  const handleYearSelected = (year: string) => {
+  const handleYearSelected = useCallback((year: string) => {
     try {
       const parsedYear = Number(year);
       setYearSelected(parsedYear);
     } catch {
       throw new Error("Invalid year value.");
     }
-  };
+  }, []);
 
   return (
     <Container>
