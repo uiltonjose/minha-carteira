@@ -4,6 +4,8 @@ import ContentHeader from "../../components/ContentHeader";
 import SelectInput from "../../components/SelectInput";
 import WalletBox from "../../components/WalletBox";
 import MessageBox from "../../components/MessageBox";
+import PieChartBox from "../../components/PieChartBox";
+import HistoryBox from "../../components/HistoryBox";
 
 import listOfMonths from "../../utils/months";
 
@@ -15,7 +17,6 @@ import sadImg from "../../assets/sad.svg";
 import grinningImg from "../../assets/grinning.svg";
 
 import { Container, Content } from "./styles";
-import PieChartBox from "../../components/PieChartBox";
 
 const Dashboard: React.FC = () => {
   const [monthSelected, setMonthSelected] = useState<number>(
@@ -145,6 +146,57 @@ const Dashboard: React.FC = () => {
     ];
   }, [totalGains, totalExpenses]);
 
+  const historyData = useMemo(() => {
+    return listOfMonths
+      .map((_, month) => {
+        let amountEntry = 0;
+        gains.forEach((gain) => {
+          const date = new Date(gain.date);
+          const gainMonth = date.getMonth();
+          const gainYear = date.getFullYear();
+
+          if (gainMonth === month && gainYear === yearSelected) {
+            try {
+              amountEntry += Number(gain.amount);
+            } catch {
+              throw new Error("Invalid amount");
+            }
+          }
+        });
+
+        let amountOutput = 0;
+        expenses.forEach((expense) => {
+          const date = new Date(expense.date);
+          const expenseMonth = date.getMonth();
+          const expenseYear = date.getFullYear();
+
+          if (expenseMonth === month && expenseYear === yearSelected) {
+            try {
+              amountOutput += Number(expense.amount);
+            } catch {
+              throw new Error("Invalid amount");
+            }
+          }
+        });
+
+        return {
+          monthNumber: month,
+          month: listOfMonths[month].substr(0, 3),
+          amountEntry: amountEntry,
+          amountOutput: amountOutput,
+        };
+      })
+      .filter((item) => {
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+        return (
+          (yearSelected === currentYear && item.monthNumber <= currentMonth) ||
+          yearSelected < currentYear
+        );
+      });
+  }, [yearSelected]);
+
   const handleMonthSelected = (month: string) => {
     try {
       const parsedMonth = Number(month);
@@ -210,7 +262,13 @@ const Dashboard: React.FC = () => {
           icon={message.icon}
         />
 
-        <PieChartBox data={relationExpensesVersusGains}/>
+        <PieChartBox data={relationExpensesVersusGains} />
+
+        <HistoryBox
+          data={historyData}
+          lineColorAmountOuput="#E44C4E"
+          lineColorAmountEntry="#F7931B"
+        />
       </Content>
     </Container>
   );

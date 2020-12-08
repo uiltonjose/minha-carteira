@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 export default [
   { "description": "Salário",     "amount": "1300.52", "type": "entrada", "frequency": "recurrent", "date": "2020-01-10" }, 
   { "description": "Freela",      "amount": "150.13",  "type": "entrada", "frequency": "eventual",   "date": "2020-01-17" }, 
@@ -8,4 +9,5 @@ export default [
   { "description": "Salário",     "amount": "2500.18", "type": "entrada", "frequency": "recurrent", "date": "2020-04-10" }, 
   { "description": "Salário",     "amount": "2500.15", "type": "entrada", "frequency": "recurrent", "date": "2020-05-10" }, 
   { "description": "Salário",     "amount": "2500.12", "type": "entrada", "frequency": "recurrent", "date": "2020-06-10" }, 
-  { "description": "Salário",     "amount": "2500.00", "type": "entrada", "frequency": "recurrent", "date": "2020-07-10" }]
+  { "description": "Salário",     "amount": "2500.00", "type": "entrada", "frequency": "recurrent", "date": "2020-07-10" },
+  { "description": "Salário",     "amount": "2500.00", "type": "entrada", "frequency": "recurrent", "date": "2019-07-10" }]

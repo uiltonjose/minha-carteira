@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 export default [
   {"description":"Energia elétrica",      "amount":"150.55","type":"saída","frequency":"recurrent","date":"2020-01-10"},
   {"description":"Água",                  "amount":"75.55", "type":"saída","frequency":"recurrent","date":"2020-01-15"},
