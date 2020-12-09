@@ -10,6 +10,7 @@ export const Grid = styled.div`
     "AS CT";
 
   height: 100vh;
+  min-width: 315px;
 
   /**
     * Layout 
